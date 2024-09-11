@@ -49,7 +49,7 @@ async def send_message(ctx, channel_id, game):
         await ctx.send(data_class.success["send"])
         for i in data_class.word["status"][game]:
             if i[:2] == "$<":
-                word = "test\n"
+                word = "test"
             else:
                 word = i
                 
