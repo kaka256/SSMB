@@ -1,0 +1,33 @@
+{
+    "word":
+    {
+        "record": "● REC",
+        "stetus": 
+        {
+        "dcs":
+            [
+                "サーバー情報\n",
+                "稼働状態：", "$<status>\n",
+                "バージョン：", "$<ver>"
+            ],
+        "stormwokrs":
+            [
+                "サーバー情報\n",
+                "稼働状態：", "$<status>\n",
+                "バージョン：", "$<ver>\n",
+                "DLC：", "<dlc>\n"
+            ]
+        }
+    },
+    "success":
+    {
+        "chenged": "変更しました",
+        "send": "送信します",
+        "send_end": "送信しました"
+    },
+    "error":
+    {
+        "error": "error",
+        "permission": "権限がありません"
+    }
+}
