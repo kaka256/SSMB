@@ -2,13 +2,13 @@
     "status":
     {
         "dcs":{
-            "status": "",
-            "ver": ""
+            "status": "稼働中",
+            "ver": "1.2.0"
         },
         "stomroks":{
-            "status": "",
-            "ver": "",
-            "dlc": ""
+            "status": "停止中",
+            "ver": "1.0.0",
+            "dlc": "すごいDLC"
         }
     },
     "admin":
