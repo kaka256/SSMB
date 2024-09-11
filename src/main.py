@@ -38,6 +38,11 @@ async def message_reload(ctx):
     data_class.message_load()
     await ctx.send("reload")
 
+@bot.command()
+async def data_reload(ctx):
+    data_class.data_load()
+    await ctx.send("reload")
+
 # send server status
 @bot.hybrid_command()
 async def send_message(ctx, channel_id, game):
@@ -50,7 +55,7 @@ async def send_message(ctx, channel_id, game):
         await ctx.send(data_class.success["send"])
         for i in data_class.word["status"][game]:
             if i[:2] == "$!":
-                word = data_class.status_data[i[2:]]
+                word = data_class.status_data[game][i[2:]]
             else:
                 word = i
                 
