@@ -28,6 +28,7 @@
     "error":
     {
         "error": "error",
+        "feilure": "失敗しました",
         "permission": "権限がありません"
     }
 }
