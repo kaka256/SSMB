@@ -7,13 +7,10 @@ intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-admin = 378480271965683713 # kaka_256 user_id
-
 class bot_data():
     def __init__(self):
         self.message_load()
-        with open("data.json", encoding="utf-8_sig") as file:
-            self.data = json.load(file)
+        self.data_load()
 
     def message_load(self):
         with open("message.json", encoding="utf-8_sig") as file:
@@ -23,6 +20,10 @@ class bot_data():
         self.success = message["success"]
         self.error = message["error"]
         self.rec_len = len(self.word["record"])
+    def data_load(self):
+        with open("data.json", encoding="utf-8_sig") as file:
+            data = json.load(file)
+        self.admin = data["admin"]
 
 data_class = bot_data()
 
@@ -73,7 +74,7 @@ async def rec(ctx):
 # bot exit command. only use admin
 @bot.hybrid_command()
 async def exit(ctx):
-    if ctx.author.id == admin:
+    if ctx.author.id in data_class.admin:
         print("exit")
         await ctx.reply("exit")
         await bot.close()
@@ -84,7 +85,7 @@ async def exit(ctx):
 # reboot command. os reboot. only use admin
 @bot.hybrid_command()
 async def reboot(ctx):
-    if ctx.author.id == admin:
+    if ctx.author.id in data_class.admin:
         print("reboot")
         await ctx.reply("reboot")
         subprocess.call("reboot")
