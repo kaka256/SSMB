@@ -25,6 +25,14 @@ class bot_data():
             data = json.load(file)
         self.admin = data["admin"]
         self.status_data = data["status"]
+    
+    def data_write(self, game, id):
+        with open("resource/data.json", mode="r+", encoding="utf-8_sig") as file:
+            data = json.load(file)
+            data["status"][game]["id"] = id
+            file.write("")
+            print(file.read())
+            json.dump(data, file, indent=4)
 
 data_class = bot_data()
 
@@ -81,12 +89,13 @@ async def send_message(ctx, channel_id, game):
                 word = i
                 
             text += word
-        await channel_obj.send(text)
+        context = await channel_obj.send(text)
+        data_class.data_write(game, context.id)
         await ctx.send(data_class.success["send_end"])
 
-@bot.command()
-async def edit_message():
-    pass
+# @bot.command()
+# async def edit_message():
+#     pass
 
 # bot exit command. only use admin
 @bot.command()
