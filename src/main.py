@@ -37,6 +37,10 @@ async def message_reload(ctx):
     data_class.message_load()
     await ctx.send("reload")
 
+@bot.hybrid_command()
+async def help(ctx):
+    await ctx.send("none")
+
 # send server status
 @bot.hybrid_command()
 async def send_message(ctx, channel_id, game):
@@ -77,7 +81,7 @@ async def rec(ctx):
         await ctx.reply(data_class.error["permission"])
 
 # bot exit command. only use admin
-@bot.hybrid_command()
+@bot.command()
 async def exit(ctx):
     if ctx.author.id in data_class.admin:
         print("exit")
@@ -88,7 +92,7 @@ async def exit(ctx):
         await ctx.reply(data_class.error["permisson"])
 
 # reboot command. os reboot. only use admin
-@bot.hybrid_command()
+@bot.command()
 async def reboot(ctx):
     if ctx.author.id in data_class.admin:
         print("reboot")
