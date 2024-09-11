@@ -45,26 +45,6 @@ async def data_reload(ctx):
     data_class.data_load()
     await ctx.send("reload")
 
-# send server status
-@bot.hybrid_command()
-async def send_message(ctx, channel_id, game):
-    channel_obj = bot.get_channel(int(channel_id))
-    game = game.lower()
-    text = ""
-    if not channel_obj or not game in data_class.word["status"]:
-        await ctx.send(data_class.error["error"])
-    else:
-        await ctx.send(data_class.success["send"])
-        for i in data_class.word["status"][game]:
-            if i[:2] == "$!":
-                word = data_class.status_data[game][i[2:]]
-            else:
-                word = i
-                
-            text += word
-        await channel_obj.send(text)
-        await ctx.send(data_class.success["send_end"])
-
 # nickname change command
 @bot.hybrid_command()
 async def rec(ctx):
@@ -83,6 +63,26 @@ async def rec(ctx):
         await ctx.reply(data_class.success["chenged"])
     except:
         await ctx.reply(data_class.error["permission"])
+
+# send server status
+@bot.command()
+async def send_message(ctx, channel_id, game):
+    channel_obj = bot.get_channel(int(channel_id))
+    game = game.lower()
+    text = ""
+    if not channel_obj or not game in data_class.word["status"]:
+        await ctx.send(data_class.error["error"])
+    else:
+        await ctx.send(data_class.success["send"])
+        for i in data_class.word["status"][game]:
+            if i[:2] == "$!":
+                word = data_class.status_data[game][i[2:]]
+            else:
+                word = i
+                
+            text += word
+        await channel_obj.send(text)
+        await ctx.send(data_class.success["send_end"])
 
 # bot exit command. only use admin
 @bot.command()
