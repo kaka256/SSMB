@@ -33,11 +33,13 @@ async def on_ready():
     print(f'We have logged in as {bot.user}')
     await bot.tree.sync()
 
+# message.json reload
 @bot.command()
 async def message_reload(ctx):
     data_class.message_load()
     await ctx.send("reload")
 
+# data.json reload
 @bot.command()
 async def data_reload(ctx):
     data_class.data_load()
