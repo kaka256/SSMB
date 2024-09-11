@@ -1,6 +1,7 @@
 import discord
 from discord.ext import commands
 import subprocess
+import json
 
 record = "● REC"
 rec_len = len(record)
@@ -68,5 +69,6 @@ async def reboot(ctx):
     else:
         await ctx.reply("権限がありません")
 
-
-bot.run("")
+with open("token.json") as file:
+    token = json.load(file)
+bot.run(token["token"])
