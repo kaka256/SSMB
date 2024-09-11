@@ -24,6 +24,7 @@ class bot_data():
         with open("resource/data.json", encoding="utf-8_sig") as file:
             data = json.load(file)
         self.admin = data["admin"]
+        self.status_data = data["status"]
 
 data_class = bot_data()
 
@@ -37,10 +38,6 @@ async def message_reload(ctx):
     data_class.message_load()
     await ctx.send("reload")
 
-@bot.hybrid_command()
-async def help(ctx):
-    await ctx.send("none")
-
 # send server status
 @bot.hybrid_command()
 async def send_message(ctx, channel_id, game):
@@ -53,7 +50,7 @@ async def send_message(ctx, channel_id, game):
         await ctx.send(data_class.success["send"])
         for i in data_class.word["status"][game]:
             if i[:2] == "$!":
-                word = "test"
+                word = data_class.status_data[i[2:]]
             else:
                 word = i
                 
