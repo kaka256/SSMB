@@ -2,10 +2,12 @@
     "status":
     {
         "dcs":{
+            "id": 0,
             "status": "稼働中",
             "ver": "1.2.0"
         },
         "stormworks":{
+            "id": 0,
             "status": "停止中",
             "ver": "1.0.0",
             "dlc": "すごいDLC"
