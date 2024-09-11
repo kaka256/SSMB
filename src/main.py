@@ -84,6 +84,10 @@ async def send_message(ctx, channel_id, game):
         await channel_obj.send(text)
         await ctx.send(data_class.success["send_end"])
 
+@bot.command()
+async def edit_message():
+    pass
+
 # bot exit command. only use admin
 @bot.command()
 async def exit(ctx):
