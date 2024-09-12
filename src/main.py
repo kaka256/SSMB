@@ -29,7 +29,7 @@ class status_bot_data():
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["status"]
     
-    def data_write(self, game, status=None, channle_id=None, message_id=None):
+    def data_write(self, game, status=None, channle_id=None, message_id=None, version=None, dlc=None):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
             if not status is None:
                 self.data_dict["status"][game]["status"] = status
@@ -37,6 +37,10 @@ class status_bot_data():
                 self.data_dict["status"][game]["channel_id"] = channle_id
             if not message_id is None:
                 self.data_dict["status"][game]["message_id"] = message_id
+            if not version is None:
+                self.data_dict["status"][game]["ver"] = version
+            if not version is None:
+                self.data_dict["status"][game]["dlc"] = dlc
             json.dump(self.data_dict, file, indent=4)
 
 data_class = status_bot_data()
@@ -147,6 +151,7 @@ async def edit_message(ctx, game, version, dlc=None):
 
         channel_obj = bot.get_channel(data_dict["channel_id"])
         message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+        data_class.data_write(game=game, version=version, dlc=dlc)
         await message_obj.edit(content=text)
         await ctx.send("edit")
 
