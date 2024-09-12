@@ -2,6 +2,8 @@
     "word":
     {
         "record": "● REC",
+        "active": "稼働中",
+        "stop": "停止中",
         "status": 
         {
         "dcs":
