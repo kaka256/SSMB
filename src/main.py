@@ -1,16 +1,18 @@
 import discord
-from discord.ext import commands
+from discord.ext import tasks, commands
 import subprocess
 import json
+from ping3 import ping
 
 intents = discord.Intents.default()
 intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
-class bot_data():
+class status_bot_data():
     def __init__(self):
         self.message_load()
         self.data_load()
+        self.last_status = False
 
     def message_load(self):
         with open("resource/message.json", encoding="utf-8_sig") as file:
@@ -27,18 +29,52 @@ class bot_data():
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["status"]
     
-    def data_write(self, game, channle_id, message_id):
+    def data_write(self, game, status=None, channle_id=None, message_id=None):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
-            self.data_dict["status"][game]["channel_id"] = channle_id
-            self.data_dict["status"][game]["message_id"] = message_id
+            if not status is None:
+                self.data_dict["status"][game]["status"] = status
+            if not channle_id is None:
+                self.data_dict["status"][game]["channel_id"] = channle_id
+            if not message_id is None:
+                self.data_dict["status"][game]["message_id"] = message_id
             json.dump(self.data_dict, file, indent=4)
 
-data_class = bot_data()
+data_class = status_bot_data()
 
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user}')
     await bot.tree.sync()
+    ping_chack.start()
+
+@tasks.loop(seconds=10.0)
+async def ping_chack():
+    data_dict = data_class.data_dict["status"]
+    responce = ping(data_class.data_dict["server_ip"])
+    if data_class.last_status == (not responce):
+        status_word = data_class.word["active"]
+        if not responce:
+            status_word = data_class.word["stop"]
+        for game in data_dict:
+            data_dict[game]["status"] = status_word
+            channel_id = data_dict[game]["channel_id"]
+            data_class.data_write(game=game, status=status_word)
+
+            new_data = {"status": status_word , "ver": data_dict[game]["ver"], "dlc": data_dict[game]["dlc"]}
+            text = ""
+            for i in data_class.word["status"][game]:
+                if i[:2] == "$!":
+                    word = new_data[i[2:]]
+                else:
+                    word = i
+                    
+                text += word
+            channel_obj = bot.get_channel(channel_id)
+            message_obj = await channel_obj.fetch_message(data_dict[game]["message_id"])
+            await message_obj.edit(content=text)
+
+    data_class.last_status = not responce
+    print(data_dict)
 
 # message.json reload
 @bot.command()
@@ -90,7 +126,7 @@ async def send_message(ctx, channel_id, game):
                 
             text += word
         context = await channel_obj.send(text)
-        data_class.data_write(game, channel_id, context.id)
+        data_class.data_write(game, channle_id=channel_id, message_id=context.id)
         await ctx.send(data_class.success["send_end"])
 
 @bot.command()
