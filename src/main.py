@@ -29,18 +29,8 @@ class status_bot_data():
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["status"]
     
-    def data_write(self, game, status=None, channle_id=None, message_id=None, version=None, dlc=None):
+    def data_write(self):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
-            if not status is None:
-                self.data_dict["status"][game]["status"] = status
-            if not channle_id is None:
-                self.data_dict["status"][game]["channel_id"] = channle_id
-            if not message_id is None:
-                self.data_dict["status"][game]["message_id"] = message_id
-            if not version is None:
-                self.data_dict["status"][game]["ver"] = version
-            if not version is None:
-                self.data_dict["status"][game]["dlc"] = dlc
             json.dump(self.data_dict, file, indent=4)
 
 data_class = status_bot_data()
@@ -62,13 +52,11 @@ async def ping_chack():
         for game in data_dict:
             data_dict[game]["status"] = status_word
             channel_id = data_dict[game]["channel_id"]
-            data_class.data_write(game=game, status=status_word)
-
-            new_data = {"status": status_word , "ver": data_dict[game]["ver"], "dlc": data_dict[game]["dlc"]}
+            data_class.data_write()
             text = ""
             for i in data_class.word["status"][game]:
                 if i[:2] == "$!":
-                    word = new_data[i[2:]]
+                    word = data_dict[game][i[2:]]
                 else:
                     word = i
                     
@@ -130,7 +118,10 @@ async def send_message(ctx, channel_id, game):
                 
             text += word
         context = await channel_obj.send(text)
-        data_class.data_write(game, channle_id=channel_id, message_id=context.id)
+        data_dict = data_class.data_dict["status"][game]
+        data_dict["channel_id"] = channel_id
+        data_dict["message_id"] = context.id
+        data_class.data_write()
         await ctx.send(data_class.success["send_end"])
 
 @bot.command()
@@ -139,19 +130,20 @@ async def edit_message(ctx, game, version, dlc=None):
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["status"][game]
-        new_data = {"status":data_dict["status"] , "ver": version, "dlc": dlc}
+        data_dict["ver"] = version
+        data_dict["dlc"] = dlc
         text = ""
         for i in data_class.word["status"][game]:
             if i[:2] == "$!":
-                word = new_data[i[2:]]
+                word = data_dict[i[2:]]
             else:
                 word = i
                 
             text += word
-
+            
+        data_class.data_write()
         channel_obj = bot.get_channel(data_dict["channel_id"])
         message_obj = await channel_obj.fetch_message(data_dict["message_id"])
-        data_class.data_write(game=game, version=version, dlc=dlc)
         await message_obj.edit(content=text)
         await ctx.send("edit")
 
