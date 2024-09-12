@@ -4,17 +4,19 @@
             "channel_id": 0,
             "message_id": 0,
             "status": "\u7a3c\u50cd\u4e2d",
-            "ver": "1.2.0"
+            "ver": "1.2.0",
+            "dlc": null
         },
         "stormworks": {
             "channel_id": 0,
             "message_id": 0,
-            "status": "\u505c\u6b62\u4e2d",
+            "status": "\u7a3c\u50cd\u4e2d",
             "ver": "1.0.0",
             "dlc": "\u3059\u3054\u3044DLC"
         }
     },
     "admin": [
         378480271965683713
-    ]
+    ],
+    "server_ip": "100.93.152.71"
 }
