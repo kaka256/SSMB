@@ -20,19 +20,18 @@ class bot_data():
         self.success = message["success"]
         self.error = message["error"]
         self.rec_len = len(self.word["record"])
+
     def data_load(self):
         with open("resource/data.json", encoding="utf-8_sig") as file:
-            data = json.load(file)
-        self.admin = data["admin"]
-        self.status_data = data["status"]
+            self.data_dict = json.load(file)
+        self.admin = self.data_dict["admin"]
+        self.status_data = self.data_dict["status"]
     
-    def data_write(self, game, id):
-        with open("resource/data.json", mode="r+", encoding="utf-8_sig") as file:
-            data = json.load(file)
-            data["status"][game]["id"] = id
-            file.write("")
-            print(file.read())
-            json.dump(data, file, indent=4)
+    def data_write(self, game, channle_id, message_id):
+        with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
+            self.data_dict["status"][game]["channel_id"] = channle_id
+            self.data_dict["status"][game]["message_id"] = message_id
+            json.dump(self.data_dict, file, indent=4)
 
 data_class = bot_data()
 
@@ -75,7 +74,8 @@ async def rec(ctx):
 # send server status
 @bot.command()
 async def send_message(ctx, channel_id, game):
-    channel_obj = bot.get_channel(int(channel_id))
+    channel_id = int(channel_id)
+    channel_obj = bot.get_channel(channel_id)
     game = game.lower()
     text = ""
     if not channel_obj or not game in data_class.word["status"]:
@@ -90,12 +90,29 @@ async def send_message(ctx, channel_id, game):
                 
             text += word
         context = await channel_obj.send(text)
-        data_class.data_write(game, context.id)
+        data_class.data_write(game, channel_id, context.id)
         await ctx.send(data_class.success["send_end"])
 
-# @bot.command()
-# async def edit_message():
-#     pass
+@bot.command()
+async def edit_message(ctx, game, version, dlc=None):
+    if not game in data_class.word["status"]:
+        await ctx.send(data_class.error["error"])
+    else:
+        data_dict = data_class.data_dict["status"][game]
+        new_data = {"status":data_dict["status"] , "ver": version, "dlc": dlc}
+        text = ""
+        for i in data_class.word["status"][game]:
+            if i[:2] == "$!":
+                word = new_data[i[2:]]
+            else:
+                word = i
+                
+            text += word
+
+        channel_obj = bot.get_channel(data_dict["channel_id"])
+        message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+        await message_obj.edit(content=text)
+        await ctx.send("edit")
 
 # bot exit command. only use admin
 @bot.command()
