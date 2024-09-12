@@ -1,20 +1,18 @@
-{
-    "status":
-    {
-        "dcs":{
+﻿{
+    "status": {
+        "dcs": {
             "id": 0,
-            "status": "稼働中",
+            "status": "\u7a3c\u50cd\u4e2d",
             "ver": "1.2.0"
         },
-        "stormworks":{
+        "stormworks": {
             "id": 0,
-            "status": "停止中",
+            "status": "\u505c\u6b62\u4e2d",
             "ver": "1.0.0",
-            "dlc": "すごいDLC"
+            "dlc": "\u3059\u3054\u3044DLC"
         }
     },
-    "admin":
-    [
+    "admin": [
         378480271965683713
     ]
 }
