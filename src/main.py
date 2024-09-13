@@ -106,7 +106,7 @@ async def rec(ctx):
 
     try:
         await ctx.author.edit(nick = nickname)
-        await ctx.reply(data_class.success["chenged"])
+        await ctx.reply(data_class.success["changed"])
     except:
         await ctx.reply(data_class.error["permission"])
 
@@ -143,6 +143,13 @@ async def edit_message(ctx, game, version, dlc=None):
 
         await message_obj.edit(content=data_class.text[game])
         await ctx.send(data_class.success["changed"])
+
+@bot.command()
+async def change_ip(ctx, ip):
+    data_class.data_dict["server_ip"] = ip
+    data_class.data_write()
+    await ctx.send(data_class.success["changed"])
+    pass
 
 # bot exit command. only use admin
 @bot.command()
