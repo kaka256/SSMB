@@ -59,8 +59,11 @@ async def on_ready():
 @tasks.loop(seconds=10.0)
 async def ping_chack():
     data_dict = data_class.data_dict["status"]
+    for game in data_dict:
+        if not data_dict[game]["channel_id"]:
+            return
     responce = ping(data_class.data_dict["server_ip"])
-    if data_class.last_status == (not responce):
+    if data_class.last_status != (not responce):
         status_word = data_class.word["active"]
         if not responce:
             status_word = data_class.word["stop"]
@@ -73,9 +76,8 @@ async def ping_chack():
             message_obj = await channel_obj.fetch_message(data_dict[game]["message_id"])
 
             await message_obj.edit(content=data_class.text[game])
-
+        print(data_dict)
     data_class.last_status = not responce
-    print(data_dict)
 
 # message.json reload
 @bot.command()
@@ -140,7 +142,7 @@ async def edit_message(ctx, game, version, dlc=None):
         message_obj = await channel_obj.fetch_message(data_dict["message_id"])
 
         await message_obj.edit(content=data_class.text[game])
-        await ctx.send("edit")
+        await ctx.send(data_class.success["changed"])
 
 # bot exit command. only use admin
 @bot.command()
