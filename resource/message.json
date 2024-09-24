@@ -32,6 +32,7 @@
     "error":
     {
         "error": "error",
+        "value": "入力情報を認識できません",
         "feilure": "失敗しました",
         "permission": "権限がありません"
     }
