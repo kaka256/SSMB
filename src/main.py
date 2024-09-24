@@ -51,6 +51,8 @@ class status_bot_data():
 
 data_class = status_bot_data()
 
+MY_GUILD_ID = discord.Object(id=data_class.setting_guilds)
+
 @bot.event
 async def on_ready():
     print(f'We have logged in as {bot.user}')
@@ -119,7 +121,8 @@ async def rec(ctx):
         await ctx.reply(data_class.error["permission"])
 
 # send server status
-@bot.hybrid_command(guild_ids=data_class.setting_guilds)
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def send_message(ctx, channel_id, game):
     channel_id = int(channel_id)
     channel_obj = bot.get_channel(channel_id)
@@ -136,7 +139,8 @@ async def send_message(ctx, channel_id, game):
         data_class.data_write()
         await ctx.send(data_class.success["send_end"])
 
-@bot.hybrid_command(guild_ids=data_class.setting_guilds)
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def edit_message(ctx, game, version, dlc=None, other=None):
     if not game in data_class.word["status"]:
         await ctx.send(data_class.error["error"])
@@ -155,7 +159,8 @@ async def edit_message(ctx, game, version, dlc=None, other=None):
         await message_obj.edit(content=data_class.text[game])
         await ctx.send(data_class.success["changed"])
 
-@bot.hybrid_command(guild_ids=data_class.setting_guilds)
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def change_ip(ctx, ip):
     data_class.data_dict["server_ip"] = ip
     data_class.data_write()
