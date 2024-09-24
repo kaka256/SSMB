@@ -30,6 +30,7 @@ class status_bot_data():
             self.data_dict = json.load(file)
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["status"]
+        self.setting_guilds = self.data_dict["setting_guilds"]
     
     def data_write(self):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
@@ -79,6 +80,13 @@ async def ping_chack():
         print(data_dict)
     data_class.last_status = not responce
 
+# test command
+@bot.command()
+async def sync(ctx, id):
+    guild = discord.Object(id=id)
+    await bot.tree.sync(guild=guild)
+    await ctx.reply("reload")
+
 # message.json reload
 @bot.command()
 async def message_reload(ctx):
@@ -111,7 +119,7 @@ async def rec(ctx):
         await ctx.reply(data_class.error["permission"])
 
 # send server status
-@bot.command()
+@bot.hybrid_command(guild_ids=data_class.setting_guilds)
 async def send_message(ctx, channel_id, game):
     channel_id = int(channel_id)
     channel_obj = bot.get_channel(channel_id)
@@ -128,14 +136,17 @@ async def send_message(ctx, channel_id, game):
         data_class.data_write()
         await ctx.send(data_class.success["send_end"])
 
-@bot.command()
-async def edit_message(ctx, game, version, dlc=None):
+@bot.hybrid_command(guild_ids=data_class.setting_guilds)
+async def edit_message(ctx, game, version, dlc=None, other=None):
     if not game in data_class.word["status"]:
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["status"][game]
         data_dict["ver"] = version
-        data_dict["dlc"] = dlc
+        if not dlc is None:
+            data_dict["dlc"] = dlc
+        if not other is None:
+            data_dict["other"] = other
         data_class.data_write()
 
         channel_obj = bot.get_channel(data_dict["channel_id"])
@@ -144,7 +155,7 @@ async def edit_message(ctx, game, version, dlc=None):
         await message_obj.edit(content=data_class.text[game])
         await ctx.send(data_class.success["changed"])
 
-@bot.command()
+@bot.hybrid_command(guild_ids=data_class.setting_guilds)
 async def change_ip(ctx, ip):
     data_class.data_dict["server_ip"] = ip
     data_class.data_write()

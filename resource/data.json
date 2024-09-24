@@ -5,18 +5,23 @@
             "message_id": 0,
             "status": "\u7a3c\u50cd\u4e2d",
             "ver": "1.2.0",
-            "dlc": null
+            "dlc": null,
+            "other": "\u30b5\u30fc\u30d0\u30fc\u306e\u72b6\u614b\u306f\u81ea\u52d5\u3067\u66f4\u65b0\u3055\u308c\u307e\u3059"
         },
         "stormworks": {
             "channel_id": 0,
             "message_id": 0,
             "status": "\u7a3c\u50cd\u4e2d",
             "ver": "1.0.0",
-            "dlc": "\u3059\u3054\u3044DLC"
+            "dlc": "\u3059\u3054\u3044DLC",
+            "other": ""
         }
     },
     "admin": [
         378480271965683713
+    ],
+    "setting_guilds": [
+        699445255195459584
     ],
     "server_ip": "100.93.152.71"
 }
