@@ -42,7 +42,7 @@ class status_bot_data():
             self.data_dict = json.load(file)
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["servers"]
-        self.setting_guilds = self.data_dict["setting_guilds"]
+        self.setting_guild = self.data_dict["setting_guild"]
     
     def data_write(self):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
@@ -63,7 +63,7 @@ class status_bot_data():
 
 data_class = status_bot_data()
 
-MY_GUILD_ID = discord.Object(id=data_class.setting_guilds)
+MY_GUILD_ID = discord.Object(id=data_class.setting_guild)
 
 @bot.event
 async def on_ready():
