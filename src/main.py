@@ -86,10 +86,7 @@ async def ping_check():
         if not server_ip:
             continue
         
-        print(server_dict)
-        print(ping("8.8.8.8"))
         responce = bool(ping(server_ip))
-        print(responce)
         if data_class.last_status[server] != responce:
             status_word = data_class.word["stop"]
             if responce:
@@ -102,8 +99,7 @@ async def ping_check():
             message_obj = await channel_obj.fetch_message(server_dict[server]["message_id"])
 
             await message_obj.edit(content=data_class.text[server])
-            print(server_dict)
-        data_class.last_status = responce
+        data_class.last_status[server] = responce
 
 # nickname change command
 @bot.hybrid_command()
@@ -164,16 +160,18 @@ async def send_message(ctx, channel_id, game):
 
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
-async def edit_message(ctx, game, version, dlc=None, other=None):
+async def edit_message(ctx, game, version=None, dlc=None, other=None):
     if not game in data_class.word["status"]:
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["servers"][game]
-        data_dict["ver"] = version
+        if not dlc is None:
+            data_dict["ver"] = version
         if not dlc is None:
             data_dict["dlc"] = dlc
         if not other is None:
             data_dict["other"] = other
+
         data_class.data_write()
 
         channel_obj = bot.get_channel(data_dict["channel_id"])
