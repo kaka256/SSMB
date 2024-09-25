@@ -33,6 +33,7 @@ class status_bot_data():
             message = json.load(file)
             
         self.word = message["word"]
+        self.messages = message["messages"]
         self.success = message["success"]
         self.error = message["error"]
         self.rec_len = len(self.word["record"])
@@ -53,7 +54,7 @@ class status_bot_data():
         server_dict = self.data_dict["servers"]
         for server in server_dict:
             text = ""
-            for i in self.word["status"][server]:
+            for i in self.messages[server]:
                 if i[:2] == "$!":
                     word = server_dict[server][i[2:]]
                 else:
@@ -147,7 +148,7 @@ async def send_message(ctx, channel_id, game):
     channel_id = int(channel_id)
     channel_obj = bot.get_channel(channel_id)
     game = game.lower()
-    if not channel_obj or not game in data_class.word["status"]:
+    if not channel_obj or not game in data_class.messages:
         await ctx.send(data_class.error["error"])
     else:
         await ctx.send(data_class.success["send"])
@@ -161,7 +162,7 @@ async def send_message(ctx, channel_id, game):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def edit_message(ctx, game, version=None, dlc=None, other=None):
-    if not game in data_class.word["status"]:
+    if not game in data_class.messages:
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["servers"][game]
@@ -184,7 +185,7 @@ async def edit_message(ctx, game, version=None, dlc=None, other=None):
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def change_ip(ctx, game, ip):
     game = game.lower()
-    if game not in data_class.data_dict["servers"]:
+    if game not in data_class.status_data:
         await ctx.send(data_class.error["error"])
         return
     
@@ -194,6 +195,13 @@ async def change_ip(ctx, game, ip):
         await ctx.send(data_class.success["changed"])
     else:
         await ctx.send(data_class.error["value"])
+
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
+async def view_data(ctx):
+    for server in data_class.status_data:
+        pass
+    await ctx.send()
 
 # bot exit command. only use admin
 @bot.command()
