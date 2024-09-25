@@ -7,7 +7,7 @@ import re
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="/", intents=intents)
+bot = commands.Bot(command_prefix="akiaki", intents=intents, help_command=None)
 
 MESSAGE_FILE_PATH = "resource/message.json"
 DATA_FILE_PATH = "resource/data.json"
@@ -26,7 +26,7 @@ class status_bot_data():
         self.message_generate()
         self.last_status = {}
         for server in self.status_data:
-            self.last_status[server] = False
+            self.last_status[server] = None
 
     def message_load(self):
         with open(MESSAGE_FILE_PATH, encoding="utf-8_sig") as file:
@@ -36,6 +36,7 @@ class status_bot_data():
         self.messages = message["messages"]
         self.success = message["success"]
         self.error = message["error"]
+        self.help = message["help"]
         self.rec_len = len(self.word["record"])
 
     def data_load(self):
@@ -51,7 +52,7 @@ class status_bot_data():
             self.message_generate()
 
     def message_generate(self):
-        server_dict = self.data_dict["servers"]
+        server_dict = self.status_data
         for server in server_dict:
             text = ""
             for i in self.messages[server]:
@@ -119,7 +120,14 @@ async def rec(ctx):
     except:
         await ctx.reply(data_class.error["permission"])
 
-# test command
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
+async def help(ctx):
+    text = ""
+    for line in data_class.help:
+        text += line
+    await ctx.reply(text)
+
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def sync(ctx, id):
@@ -199,9 +207,13 @@ async def change_ip(ctx, game, ip):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def view_data(ctx):
+    text = ""
     for server in data_class.status_data:
-        pass
-    await ctx.send()
+        text += f"\n{server}\n"
+        for item in data_class.status_data[server]:
+            text += f"{item}：{data_class.status_data[server][item]}\n"
+
+    await ctx.send(text)
 
 # bot exit command. only use admin
 @bot.command()

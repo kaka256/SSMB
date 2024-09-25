@@ -35,5 +35,13 @@
             "DLC：", "$!dlc", "\n",
             "備考：", "$!other"
         ]
-    }
+    },
+    "help":
+    [
+        "```",
+        "/send_message channel_id game ：メッセージを送信する\n",
+        "/edit_message game ：送信済みのメッセージ情報を編集する\n",
+        "/sync id ：コマンドリストを手動更新する。idにはサーバーIDを入力\n",
+        "```"
+    ]
 }
