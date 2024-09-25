@@ -1,7 +1,7 @@
 # SSMB
 Server Status Manager bot
 
-## 実行準備
+## 環境構築
 ### pythonを導入する
 [python](https://www.python.org/downloads/)インストールする
 
@@ -15,8 +15,9 @@ Server Status Manager bot
 
 `. ./Scripts/activate`
 
-### discord.pyの導入
+### 各種モジュールの導入
 `pip install discord.py`
+`pip install ping3`
 
 ## 実行
 
