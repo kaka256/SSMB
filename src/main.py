@@ -7,7 +7,7 @@ import re
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="!", intents=intents)
+bot = commands.Bot(command_prefix="/", intents=intents)
 
 MESSAGE_FILE_PATH = "resource/message.json"
 DATA_FILE_PATH = "resource/data.json"
@@ -24,7 +24,9 @@ class status_bot_data():
         self.message_load()
         self.data_load()
         self.message_generate()
-        self.last_status = False
+        self.last_status = {}
+        for server in self.status_data:
+            self.last_status[server] = False
 
     def message_load(self):
         with open(MESSAGE_FILE_PATH, encoding="utf-8_sig") as file:
@@ -71,25 +73,27 @@ async def on_ready():
 
 @tasks.loop(seconds=10.0)
 async def ping_check():
-    server_dict = data_class.data_dict["servers"]
+    server_dict = data_class.status_data
     for server in server_dict:
         if not server_dict[server]["channel_id"]:
-            continue
-    
-        server_ip = server_dict[server]["server_ip"]
-        if not server_ip:
             continue
 
         channel_id = server_dict[server]["channel_id"]
         if not channel_id:
             continue
-        
-        responce = ping(server_ip)
-        if data_class.last_status != (not responce):
-            status_word = data_class.word["active"]
-            if not responce:
-                status_word = data_class.word["stop"]
 
+        server_ip = server_dict[server]["server_ip"]
+        if not server_ip:
+            continue
+        
+        print(server_dict)
+        print(ping("8.8.8.8"))
+        responce = bool(ping(server_ip))
+        print(responce)
+        if data_class.last_status[server] != responce:
+            status_word = data_class.word["stop"]
+            if responce:
+                status_word = data_class.word["active"]
 
             server_dict[server]["status"] = status_word
             data_class.data_write()
@@ -99,7 +103,7 @@ async def ping_check():
 
             await message_obj.edit(content=data_class.text[server])
             print(server_dict)
-        data_class.last_status = not responce
+        data_class.last_status = responce
 
 # nickname change command
 @bot.hybrid_command()
