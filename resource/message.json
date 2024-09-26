@@ -40,8 +40,14 @@
     [
         "```",
         "/send_message channel_id game ：メッセージを送信する\n",
-        "/edit_message game ：送信済みのメッセージ情報を編集する\n",
+        "/edit_message game ：gameのメッセージ内容を編集する\n",
+        "/change_ip game ip ：gameに登録されているipを変更する\n",
+        "/data_reload ：data.jsonからデータを読み直す\n",
+        "/message_reload ：message.jsonからテキストを読み直す\n",
         "/sync id ：コマンドリストを手動更新する。idにはサーバーIDを入力\n",
+        "/view_data ：data.jsonに書かれている情報を表示",
+        "/exit ：botを終了する adminのみ\n",
+        "/reboot ：bot機を再起動する adminのみ\n",
         "```"
     ]
 }
