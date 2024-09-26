@@ -222,6 +222,7 @@ async def view_data(ctx):
 
 # bot exit command. only use admin
 @bot.command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def exit(ctx):
     if ctx.author.id in data_class.admin:
         print("exit")   
@@ -233,6 +234,7 @@ async def exit(ctx):
 
 # reboot command. os reboot. only use admin
 @bot.command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def reboot(ctx):
     if ctx.author.id in data_class.admin:
         print("reboot")
