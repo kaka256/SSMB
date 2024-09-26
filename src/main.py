@@ -182,7 +182,7 @@ async def edit_message(ctx, game, version=None, dlc=None, other=None):
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["servers"][game]
-        if not dlc is None:
+        if not version is None:
             data_dict["ver"] = version
         if not dlc is None:
             data_dict["dlc"] = dlc
