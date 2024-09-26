@@ -136,6 +136,7 @@ async def help(ctx):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def sync(ctx, id):
+    await ctx.defer()
     guild = discord.Object(id=id)
     await bot.tree.sync(guild=guild)
     await ctx.reply("reload")
@@ -144,6 +145,7 @@ async def sync(ctx, id):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def message_reload(ctx):
+    await ctx.defer()
     data_class.message_load()
     await ctx.send("reload")
 
@@ -151,6 +153,7 @@ async def message_reload(ctx):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def data_reload(ctx):
+    await ctx.defer()
     data_class.data_load()
     await ctx.send("reload")
 
