@@ -88,7 +88,12 @@ async def ping_check():
         if not server_ip:
             continue
         
-        responce = bool(ping(server_ip))
+        try:
+            responce = bool(ping(server_ip))
+        except PermissionError as e:
+            print(e)
+            responce = None
+
         if data_class.last_status[server] != responce:
             status_word = data_class.word["stop"]
             if responce:

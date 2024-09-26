@@ -1,1 +1,1 @@
-python3 src/main.py
+sudo ./.venv/bin/python src/main.py
