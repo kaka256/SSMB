@@ -4,7 +4,7 @@ Server Status Manager bot
 
 ## windows
 
-## 環境構築
+### 環境構築
 
 `build.bat`
 
@@ -12,12 +12,12 @@ Server Status Manager bot
 
 `start.bat`
 
-### linux
+## linux
 
-## 環境構築
+### 環境構築
 
 `bash build.sh`
 
-## 実行
+### 実行
 
 `bash start.sh`
