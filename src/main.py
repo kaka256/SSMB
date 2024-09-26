@@ -178,7 +178,7 @@ async def send_message(ctx, channel_id, game):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def edit_message(ctx, game, version=None, dlc=None, other=None):
-    if not game in data_class.messages:
+    if game not in data_class.messages:
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["servers"][game]
@@ -192,9 +192,10 @@ async def edit_message(ctx, game, version=None, dlc=None, other=None):
         data_class.data_write()
 
         channel_obj = bot.get_channel(data_dict["channel_id"])
-        message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+        if not channel_obj is None:
+            message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+            await message_obj.edit(content=data_class.text[game])
 
-        await message_obj.edit(content=data_class.text[game])
         await ctx.send(data_class.success["changed"])
 
 @bot.hybrid_command()
