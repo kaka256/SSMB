@@ -1,5 +1,4 @@
-echo "input bot token"
-read token
+read -sp "Token: " token
 
 echo '{"token":"'$token'"}' > resource/token.json
 
