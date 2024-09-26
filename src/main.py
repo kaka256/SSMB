@@ -225,7 +225,7 @@ async def view_data(ctx):
     await ctx.send(text)
 
 # bot exit command. only use admin
-@bot.command()
+@bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def exit(ctx):
     if ctx.author.id in data_class.admin:
@@ -237,7 +237,7 @@ async def exit(ctx):
         await ctx.reply(data_class.error["permission"])
 
 # reboot command. os reboot. only use admin
-@bot.command()
+@bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def reboot(ctx):
     if ctx.author.id in data_class.admin:
