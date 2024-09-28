@@ -7,7 +7,7 @@ import re
 
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="akiaki", intents=intents, help_command=None)
+bot = commands.Bot(command_prefix="2jxg84G2CQ6PgYHtnBLn", intents=intents, help_command=None)
 
 MESSAGE_FILE_PATH = "resource/message.json"
 DATA_FILE_PATH = "resource/data.json"
