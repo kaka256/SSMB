@@ -1,26 +1,23 @@
 # SSMB
+
 Server Status Manager bot
 
-## 環境構築
-### pythonを導入する
-[python](https://www.python.org/downloads/)インストールする
+## windows
 
+### 環境構築
 
-### 仮想環境を作成する
-実行する場所に移動したのちコマンドプロンプトにて以下のコマンドを実行する
+`build.bat`
 
-`python -m venv .venv `
+### 実行
 
-アクティベーション（windows）
+`start.bat`
 
-`. ./Scripts/activate`
+## linux
 
-### 各種モジュールの導入
-`pip install discord.py`
-`pip install ping3`
+### 環境構築
 
-## 実行
+`bash build.sh`
 
-仮想環境をアクティベーションした後main.pyを実行する
+### 実行
 
-`python main.py`
+`bash start.sh`

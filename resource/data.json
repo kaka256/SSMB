@@ -3,20 +3,20 @@
         "dcs": {
             "channel_id": 0,
             "message_id": 0,
-            "server_ip": "100.93.152.71",
+            "server_ip": "222.149.159.164",
             "status": "\u7a3c\u50cd\u4e2d",
-            "ver": "1.2.0",
+            "ver": "2.9.7.59263",
             "dlc": null,
-            "other": "\u30b5\u30fc\u30d0\u30fc\u306e\u72b6\u614b\u306f\u81ea\u52d5\u3067\u66f4\u65b0\u3055\u308c\u307e\u3059"
+            "other": "\u30b5\u30fc\u30d0\u30fc\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u306f04:00\u306b\u81ea\u52d5\u66f4\u65b0\u3055\u308c\u307e\u3059"
         },
         "stormworks": {
             "channel_id": 0,
             "message_id": 0,
-            "server_ip": "100.93.152.71",
+            "server_ip": "222.149.159.164",
             "status": "\u7a3c\u50cd\u4e2d",
-            "ver": "1.0.0",
-            "dlc": "\u3059\u3054\u3044DLC",
-            "other": ""
+            "ver": "1.12.3",
+            "dlc": "\u6b66\u5668DLC\u3000\u5de5\u696dDLC\u3000~~\u5b87\u5b99DLC~~",
+            "other": "\u30b5\u30fc\u30d0\u30fc\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u306f04:00\u306b\u81ea\u52d5\u66f4\u65b0\u3055\u308c\u307e\u3059"
         }
     },
     "admin": [

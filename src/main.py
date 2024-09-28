@@ -31,7 +31,7 @@ class status_bot_data():
     def message_load(self):
         with open(MESSAGE_FILE_PATH, encoding="utf-8_sig") as file:
             message = json.load(file)
-            
+
         self.word = message["word"]
         self.messages = message["messages"]
         self.success = message["success"]
@@ -45,7 +45,7 @@ class status_bot_data():
         self.admin = self.data_dict["admin"]
         self.status_data = self.data_dict["servers"]
         self.setting_guild = self.data_dict["setting_guild"]
-    
+
     def data_write(self):
         with open("resource/data.json", mode="w", encoding="utf-8_sig") as file:
             json.dump(self.data_dict, file, indent=4)
@@ -87,8 +87,13 @@ async def ping_check():
         server_ip = server_dict[server]["server_ip"]
         if not server_ip:
             continue
-        
-        responce = bool(ping(server_ip))
+
+        try:
+            responce = bool(ping(server_ip))
+        except PermissionError as e:
+            print(e)
+            responce = None
+
         if data_class.last_status[server] != responce:
             status_word = data_class.word["stop"]
             if responce:
@@ -96,7 +101,7 @@ async def ping_check():
 
             server_dict[server]["status"] = status_word
             data_class.data_write()
-            
+
             channel_obj = bot.get_channel(channel_id)
             message_obj = await channel_obj.fetch_message(server_dict[server]["message_id"])
 
@@ -107,7 +112,7 @@ async def ping_check():
 @bot.hybrid_command()
 async def rec(ctx):
     nickname = f"{ctx.author.name}{data_class.word['record']}"
-    
+
     if ctx.author.nick[:-data_class.rec_len] == ctx.author.name:
         nickname = None
 
@@ -131,6 +136,7 @@ async def help(ctx):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def sync(ctx, id):
+    await ctx.defer()
     guild = discord.Object(id=id)
     await bot.tree.sync(guild=guild)
     await ctx.reply("reload")
@@ -139,6 +145,7 @@ async def sync(ctx, id):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def message_reload(ctx):
+    await ctx.defer()
     data_class.message_load()
     await ctx.send("reload")
 
@@ -146,6 +153,7 @@ async def message_reload(ctx):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def data_reload(ctx):
+    await ctx.defer()
     data_class.data_load()
     await ctx.send("reload")
 
@@ -170,11 +178,11 @@ async def send_message(ctx, channel_id, game):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def edit_message(ctx, game, version=None, dlc=None, other=None):
-    if not game in data_class.messages:
+    if game not in data_class.messages:
         await ctx.send(data_class.error["error"])
     else:
         data_dict = data_class.data_dict["servers"][game]
-        if not dlc is None:
+        if not version is None:
             data_dict["ver"] = version
         if not dlc is None:
             data_dict["dlc"] = dlc
@@ -184,9 +192,10 @@ async def edit_message(ctx, game, version=None, dlc=None, other=None):
         data_class.data_write()
 
         channel_obj = bot.get_channel(data_dict["channel_id"])
-        message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+        if not channel_obj is None:
+            message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+            await message_obj.edit(content=data_class.text[game])
 
-        await message_obj.edit(content=data_class.text[game])
         await ctx.send(data_class.success["changed"])
 
 @bot.hybrid_command()
@@ -196,7 +205,7 @@ async def change_ip(ctx, game, ip):
     if game not in data_class.status_data:
         await ctx.send(data_class.error["error"])
         return
-    
+
     if is_valid_ip(ip):
         data_class.data_dict["servers"][game]["server_ip"] = ip
         data_class.data_write()
@@ -216,10 +225,11 @@ async def view_data(ctx):
     await ctx.send(text)
 
 # bot exit command. only use admin
-@bot.command()
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def exit(ctx):
     if ctx.author.id in data_class.admin:
-        print("exit")   
+        print("exit")
         await ctx.reply("exit")
         await bot.close()
         await ctx.reply(data_class.error["failure"])
@@ -227,7 +237,8 @@ async def exit(ctx):
         await ctx.reply(data_class.error["permission"])
 
 # reboot command. os reboot. only use admin
-@bot.command()
+@bot.hybrid_command()
+@discord.app_commands.guilds(MY_GUILD_ID)
 async def reboot(ctx):
     if ctx.author.id in data_class.admin:
         print("reboot")
