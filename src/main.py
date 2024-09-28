@@ -5,12 +5,15 @@ import json
 from ping3 import ping
 import re
 
+with open("resource/config.json") as file:
+    config = json.load(file)
+
+MESSAGE_FILE_PATH = config["message_file_path"]
+DATA_FILE_PATH = config["data_file_path"]
+
 intents = discord.Intents.default()
 intents.message_content = True
-bot = commands.Bot(command_prefix="2jxg84G2CQ6PgYHtnBLn", intents=intents, help_command=None)
-
-MESSAGE_FILE_PATH = "resource/message.json"
-DATA_FILE_PATH = "resource/data.json"
+bot = commands.Bot(command_prefix=config["command_prefix"], intents=intents, help_command=None)
 
 def is_valid_ip(ip):
     ip_pattern = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
