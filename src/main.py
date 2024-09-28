@@ -131,126 +131,136 @@ async def rec(ctx):
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def help(ctx):
-    text = ""
-    for line in data_class.help:
-        text += line
-    await ctx.reply(text)
+    if ctx.guild.id == data_class.setting_guild:
+        text = ""
+        for line in data_class.help:
+            text += line
+        await ctx.reply(text)
 
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def sync(ctx, id):
-    await ctx.defer()
-    guild = discord.Object(id=id)
-    await bot.tree.sync(guild=guild)
-    await ctx.reply("reload")
+    if ctx.guild.id == data_class.setting_guild:
+        await ctx.defer()
+        guild = discord.Object(id=id)
+        await bot.tree.sync(guild=guild)
+        await ctx.reply("reload")
 
 # message.json reload
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def message_reload(ctx):
-    await ctx.defer()
-    data_class.message_load()
-    await ctx.send("reload")
+    if ctx.guild.id == data_class.setting_guild:
+        await ctx.defer()
+        data_class.message_load()
+        await ctx.send("reload")
 
 # data.json reload
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def data_reload(ctx):
-    await ctx.defer()
-    data_class.data_load()
-    await ctx.send("reload")
+    if ctx.guild.id == data_class.setting_guild:
+        await ctx.defer()
+        data_class.data_load()
+        await ctx.send("reload")
 
 # send server status
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def send_message(ctx, channel_id, game):
-    channel_id = int(channel_id)
-    channel_obj = bot.get_channel(channel_id)
-    game = game.lower()
-    if not channel_obj or not game in data_class.messages:
-        await ctx.send(data_class.error["error"])
-    else:
-        await ctx.send(data_class.success["send"])
-        context = await channel_obj.send(data_class.text[game])
-        data_dict = data_class.data_dict["servers"][game]
-        data_dict["channel_id"] = channel_id
-        data_dict["message_id"] = context.id
-        data_class.data_write()
-        await ctx.send(data_class.success["send_end"])
+    if ctx.guild.id == data_class.setting_guild:
+        channel_id = int(channel_id)
+        channel_obj = bot.get_channel(channel_id)
+        game = game.lower()
+        if not channel_obj or not game in data_class.messages:
+            await ctx.send(data_class.error["error"])
+        else:
+            await ctx.send(data_class.success["send"])
+            context = await channel_obj.send(data_class.text[game])
+            data_dict = data_class.data_dict["servers"][game]
+            data_dict["channel_id"] = channel_id
+            data_dict["message_id"] = context.id
+            data_class.data_write()
+            await ctx.send(data_class.success["send_end"])
 
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def edit_message(ctx, game, version=None, dlc=None, other=None):
-    if game not in data_class.messages:
-        await ctx.send(data_class.error["error"])
-    else:
-        data_dict = data_class.data_dict["servers"][game]
-        if not version is None:
-            data_dict["ver"] = version
-        if not dlc is None:
-            data_dict["dlc"] = dlc
-        if not other is None:
-            data_dict["other"] = other
+    if ctx.guild.id == data_class.setting_guild:
+        if game not in data_class.messages:
+            await ctx.send(data_class.error["error"])
+        else:
+            data_dict = data_class.data_dict["servers"][game]
+            if not version is None:
+                data_dict["ver"] = version
+            if not dlc is None:
+                data_dict["dlc"] = dlc
+            if not other is None:
+                data_dict["other"] = other
 
-        data_class.data_write()
+            data_class.data_write()
 
-        channel_obj = bot.get_channel(data_dict["channel_id"])
-        if not channel_obj is None:
-            message_obj = await channel_obj.fetch_message(data_dict["message_id"])
-            await message_obj.edit(content=data_class.text[game])
+            channel_obj = bot.get_channel(data_dict["channel_id"])
+            if not channel_obj is None:
+                message_obj = await channel_obj.fetch_message(data_dict["message_id"])
+                await message_obj.edit(content=data_class.text[game])
 
-        await ctx.send(data_class.success["changed"])
+            await ctx.send(data_class.success["changed"])
 
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def change_ip(ctx, game, ip):
-    game = game.lower()
-    if game not in data_class.status_data:
-        await ctx.send(data_class.error["error"])
-        return
+    if ctx.guild.id == data_class.setting_guild:
+        game = game.lower()
+        if game not in data_class.status_data:
+            await ctx.send(data_class.error["error"])
+            return
 
-    if is_valid_ip(ip):
-        data_class.data_dict["servers"][game]["server_ip"] = ip
-        data_class.data_write()
-        await ctx.send(data_class.success["changed"])
-    else:
-        await ctx.send(data_class.error["value"])
+        if is_valid_ip(ip):
+            data_class.data_dict["servers"][game]["server_ip"] = ip
+            data_class.data_write()
+            await ctx.send(data_class.success["changed"])
+        else:
+            await ctx.send(data_class.error["value"])
 
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def view_data(ctx):
-    text = ""
-    for server in data_class.status_data:
-        text += f"\n{server}\n"
-        for item in data_class.status_data[server]:
-            text += f"{item}：{data_class.status_data[server][item]}\n"
+    if ctx.guild.id == data_class.setting_guild:
+        text = ""
+        for server in data_class.status_data:
+            text += f"\n{server}\n"
+            for item in data_class.status_data[server]:
+                text += f"{item}：{data_class.status_data[server][item]}\n"
 
-    await ctx.send(text)
+        await ctx.send(text)
 
 # bot exit command. only use admin
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def exit(ctx):
-    if ctx.author.id in data_class.admin:
-        print("exit")
-        await ctx.reply("exit")
-        await bot.close()
-        await ctx.reply(data_class.error["failure"])
-    else:
-        await ctx.reply(data_class.error["permission"])
+    if ctx.guild.id == data_class.setting_guild:
+        if ctx.author.id in data_class.admin:
+            print("exit")
+            await ctx.reply("exit")
+            await bot.close()
+            await ctx.reply(data_class.error["failure"])
+        else:
+            await ctx.reply(data_class.error["permission"])
 
 # reboot command. os reboot. only use admin
 @bot.hybrid_command()
 @discord.app_commands.guilds(MY_GUILD_ID)
 async def reboot(ctx):
-    if ctx.author.id in data_class.admin:
-        print("reboot")
-        await ctx.reply("reboot")
-        subprocess.call("reboot")
-        await bot.close()
-        await ctx.reply(data_class.error["failure"])
-    else:
-        await ctx.reply(data_class.error["permission"])
+    if ctx.guild.id == data_class.setting_guild:
+        if ctx.author.id in data_class.admin:
+            print("reboot")
+            await ctx.reply("reboot")
+            subprocess.call("reboot")
+            await bot.close()
+            await ctx.reply(data_class.error["failure"])
+        else:
+            await ctx.reply(data_class.error["permission"])
 
 with open("resource/token.json") as file:
     token = json.load(file)
