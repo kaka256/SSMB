@@ -22,14 +22,16 @@
     {
         "dcs":
         [
-            "サーバー情報", "\n",
+            "DCS World サーバー情報", "\n",
+            "サーバー名：Yuki_256 DCS Server",
             "稼働状態：", "$!status", "\n",
             "バージョン：", "$!ver", "\n",
             "備考：", "$!other"
         ],
         "stormworks":
         [
-            "サーバー情報\n",
+            "Stormworks サーバー情報\n",
+            "サーバー名：Mirioga-Stormworks",
             "稼働状態：", "$!status", "\n",
             "バージョン：", "$!ver", "\n",
             "DLC：", "$!dlc", "\n",

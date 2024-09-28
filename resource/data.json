@@ -3,7 +3,7 @@
         "dcs": {
             "channel_id": 0,
             "message_id": 0,
-            "server_ip": "222.149.159.164",
+            "server_ip": "100.93.152.71",
             "status": "\u7a3c\u50cd\u4e2d",
             "ver": "2.9.7.59263",
             "dlc": null,
@@ -12,7 +12,7 @@
         "stormworks": {
             "channel_id": 0,
             "message_id": 0,
-            "server_ip": "222.149.159.164",
+            "server_ip": "100.93.152.71",
             "status": "\u7a3c\u50cd\u4e2d",
             "ver": "1.12.3",
             "dlc": "\u6b66\u5668DLC\u3000\u5de5\u696dDLC\u3000~~\u5b87\u5b99DLC~~",
