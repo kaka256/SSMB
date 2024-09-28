@@ -1,1 +1,1 @@
-sudo ./.venv/bin/python src/main.py
+sudo ".venv/bin/python" src/main.py
